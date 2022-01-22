@@ -33,9 +33,16 @@ function createMenu(items) {
             }
             
             if (item.event !== null) {
-                $.post('https://qb-radialmenu/selectItem', JSON.stringify({
-                    itemData: item
-                }))
+                if (item.data !== null) {
+                    $.post('https://qb-radialmenu/selectItem', JSON.stringify({
+                        itemData: item,
+                        data: item.data
+                    }))
+                } else {
+                    $.post('https://qb-radialmenu/selectItem', JSON.stringify({
+                        itemData: item
+                    }))
+                }
             }
         }
     });
@@ -44,7 +51,7 @@ function createMenu(items) {
 $(document).on('keydown', function(e) {
     switch(e.key) {
         case "Escape":
-        case "F1":
+        case "f1":
             QBRadialMenu.close();
             break;
     }

@@ -131,7 +131,7 @@ RegisterNetEvent('qb-trunk:client:KidnapTrunk', function()
                 TriggerServerEvent("qb-trunk:server:KidnapTrunk", GetPlayerServerId(closestPlayer), closestVehicle)
             end
         else
-            QBCore.Functions.Notify(Lang:t("error.not_kidnapped"), 'error')
+            QBCore.Functions.Notify('You did not kipnap this person!', 'error')
         end
     end
 end)
@@ -162,15 +162,18 @@ RegisterNetEvent('qb-trunk:client:KidnapGetIn', function(veh)
                                 inTrunk = true
                                 Wait(500)
                                 SetVehicleDoorShut(closestVehicle, 5, false)
-                                QBCore.Functions.Notify(Lang:t("success.entered_trunk"), 'success', 4000)
+                                QBCore.Functions.Notify('You\'re in the trunk.', 'success', 4000)
                                 TrunkCam(true)
+
                                 isKidnapped = true
                             -- else
-                                -- QBCore.Functions.Notify(Lang:t("error.trunk_closed"), 'error', 2500)
+                                -- QBCore.Functions.Notify('Is the trunk closed?', 'error', 2500)
                             -- end
                         else
-                            local vehicle = GetEntityAttachedTo(ped)
+                            local ped = PlayerPedId()
+                            local vehicle = GetEntityAttachedTo(PlayerPedId())
                             local plate = QBCore.Functions.GetPlate(vehicle)
+
                             if GetVehicleDoorAngleRatio(vehicle, 5) > 0 then
                                 local vehCoords = GetOffsetFromEntityInWorldCoords(vehicle, 0, -5.0, 0)
                                 DetachEntity(ped, true, true)
@@ -181,27 +184,28 @@ RegisterNetEvent('qb-trunk:client:KidnapGetIn', function(veh)
                                 SetEntityCollision(PlayerPedId(), true, true)
                                 TrunkCam(false)
                             else
-                                QBCore.Functions.Notify(Lang:t("error.trunk_closed"), 'error', 2500)
+                                QBCore.Functions.Notify('The trunk is closed?', 'error', 2500)
                             end
                         end
                     else
-                        QBCore.Functions.Notify(Lang:t("error.someone_in_trunk"), 'error', 2500)
+                        QBCore.Functions.Notify('Anyone in there yet?', 'error', 2500)
                     end
                 else
-                    QBCore.Functions.Notify(Lang:t("error.already_in_trunk"), 'error', 2500)
+                    QBCore.Functions.Notify('Your already in the trunk', 'error', 2500)
                 end
             else
-                QBCore.Functions.Notify(Lang:t("error.cant_enter_trunk"), 'error', 2500)
+                QBCore.Functions.Notify('You cant get in this trunk..', 'error', 2500)
             end
         end, plate)
     else
-        QBCore.Functions.Notify(Lang:t("error.cant_enter_trunk"), 'error', 2500)
+        QBCore.Functions.Notify('You cant get in this trunk..', 'error', 2500)
     end
 end)
 
-RegisterNetEvent('qb-trunk:client:GetIn', function()
+RegisterNetEvent('qb-trunk:client:GetIn', function(isKidnapped)
     local ped = PlayerPedId()
     local closestVehicle = getNearestVeh()
+
     if closestVehicle ~= 0 then
         local vehClass = GetVehicleClass(closestVehicle)
         local plate = QBCore.Functions.GetPlate(closestVehicle)
@@ -224,31 +228,32 @@ RegisterNetEvent('qb-trunk:client:GetIn', function()
                                 inTrunk = true
                                 Wait(500)
                                 SetVehicleDoorShut(closestVehicle, 5, false)
-                                QBCore.Functions.Notify(Lang:t("success.entered_trunk"), 'success', 4000)
+                                QBCore.Functions.Notify('You are already in the trunk.', 'Goodluck', 4000)
                                 TrunkCam(true)
                             else
-                                QBCore.Functions.Notify(Lang:t("error.trunk_closed"), 'error', 2500)
+                                QBCore.Functions.Notify('Is the trunk closed?', 'error', 2500)
                             end
                         else
-                            QBCore.Functions.Notify(Lang:t("error.someone_in_trunk"), 'error', 2500)
+                            QBCore.Functions.Notify('Looks like there is some 1 in there?', 'error', 2500)
                         end
                     else
-                        QBCore.Functions.Notify(Lang:t("error.already_in_trunk"), 'error', 2500)
+                        QBCore.Functions.Notify('You are already in the trunk', 'error', 2500)
                     end
                 else
-                    QBCore.Functions.Notify(Lang:t("error.cant_enter_trunk"), 'error', 2500)
+                    QBCore.Functions.Notify('You cant get in this trunk..', 'error', 2500)
                 end
             end, plate)
         else
-            QBCore.Functions.Notify(Lang:t("error.cant_enter_trunk"), 'error', 2500)
+            QBCore.Functions.Notify('You cant get in this trunk..', 'error', 2500)
         end
     else
-        QBCore.Functions.Notify(Lang:t("error.no_vehicle_found"), 'error', 2500)
+        QBCore.Functions.Notify('There is no vehicle to see.', 'error', 2500)
     end
 end)
 
 CreateThread(function()
     while true do
+
         if inTrunk then
             if not isKidnapped then
                 local ped = PlayerPedId()
@@ -257,7 +262,7 @@ CreateThread(function()
                 local plate = QBCore.Functions.GetPlate(vehicle)
 
                 if DoesEntityExist(vehicle) then
-                    DrawText3Ds(drawPos.x, drawPos.y, drawPos.z + 0.75, Lang:t("general.get_out_trunk_button"))
+                    DrawText3Ds(drawPos.x, drawPos.y, drawPos.z + 0.75, '[E] To get out of the trunk')
 
                     if IsControlJustPressed(0, 38) then
                         if GetVehicleDoorAngleRatio(vehicle, 5) > 0 then
@@ -270,12 +275,12 @@ CreateThread(function()
                             SetEntityCollision(PlayerPedId(), true, true)
                             TrunkCam(false)
                         else
-                            QBCore.Functions.Notify(Lang:t("error.trunk_closed"), 'error', 2500)
+                            QBCore.Functions.Notify('Is the trunk closed?', 'error', 2500)
                         end
                     end
 
                     if GetVehicleDoorAngleRatio(vehicle, 5) > 0 then
-                        DrawText3Ds(drawPos.x, drawPos.y, drawPos.z + 0.5, Lang:t("general.close_trunk_button"))
+                        DrawText3Ds(drawPos.x, drawPos.y, drawPos.z + 0.5, '[G] To close the trunk')
                         if IsControlJustPressed(0, 47) then
                             if not IsVehicleSeatFree(vehicle, -1) then
                                 TriggerServerEvent('qb-radialmenu:trunk:server:Door', false, plate, 5)
@@ -284,7 +289,7 @@ CreateThread(function()
                             end
                         end
                     else
-                        DrawText3Ds(drawPos.x, drawPos.y, drawPos.z + 0.5, Lang:t("general.open_trunk_button"))
+                        DrawText3Ds(drawPos.x, drawPos.y, drawPos.z + 0.5, '[G] To open the trunk')
                         if IsControlJustPressed(0, 47) then
                             if not IsVehicleSeatFree(vehicle, -1) then
                                 TriggerServerEvent('qb-radialmenu:trunk:server:Door', true, plate, 5)
