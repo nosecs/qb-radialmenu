@@ -461,6 +461,12 @@ Config.MenuItems = {
             }
         }
     },
+    [4] = {
+        id = 'jobinteractions',
+        title = 'Work',
+        icon = 'briefcase',
+        items = {}
+    }
 }
 
 Config.JobInteractions = {
@@ -583,6 +589,20 @@ Config.JobInteractions = {
             event = 'police:client:SendPoliceEmergencyAlert',
             shouldClose = true
         }, {
+            id = 'rifleback',
+            title = 'Rifle Back',
+            icon = 'key',
+            type = 'client',
+            event = 'police:client:rifleback',
+            shouldClose = true
+        }, {
+            id = 'revivep',
+            title = 'Revive',
+            icon = 'user-md',
+            type = 'client',
+            event = 'hospital:client:RevivePlayer',
+            shouldClose = true
+        }, {
             id = 'checkvehstatus',
             title = 'Check Tune Status',
             icon = 'info-circle',
@@ -596,14 +616,14 @@ Config.JobInteractions = {
             type = 'client',
             event = 'qb-houses:client:ResetHouse',
             shouldClose = true
-        }, {
+        }, --[[{
             id = 'takedriverlicense',
             title = 'Revoke Drivers License',
             icon = 'id-card',
             type = 'client',
             event = 'police:client:SeizeDriverLicense',
             shouldClose = true
-        }, {
+        }, --]]{
             id = 'policeinteraction',
             title = 'Police Actions',
             icon = 'tasks',
@@ -645,6 +665,27 @@ Config.JobInteractions = {
                     shouldClose = true
                 }
             }
+        }, {
+            id = 'policevehicle',
+            title = 'Police Vehicle',
+            icon = 'car',
+            items = {
+                {
+                    id = 'radar',
+                    title = 'Radar',
+                    icon = 'video',
+                    type = 'client',
+                    event = 'police:client:openradar',
+                    shouldClose = true
+                }
+            }
+        }, {
+            id = 'policemdt',
+            title = 'MDT',
+            icon = 'tablet-alt',
+            type = 'client',
+            event = 'togglepolicemdt',
+            shouldClose = true
         }, {
             id = 'policeobjects',
             title = 'Objects',

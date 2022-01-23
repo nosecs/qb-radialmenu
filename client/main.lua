@@ -167,9 +167,23 @@ function setupSubItems()
     end
 end
 
+
+Citizen.CreateThread(function()
+	while true do
+		if inRadialMenu then
+			DisableControlAction(0, 24, true)
+			DisableControlAction(0, 257, true)
+		end
+		Wait(1)
+	end
+end)
+
+
 function openRadial(bool)
     setupSubItems()
+    
     SetNuiFocus(bool, bool)
+    SetNuiFocusKeepInput(bool)
     SendNUIMessage({
         action = "ui",
         radial = bool,
